@@ -6,5 +6,9 @@
   "create_post": "Create Post",
   "posts": "Posts",
   "comments": "Comments",
-  "submit": "Submit"
+  "submit": "Submit",
+  "tag": "Tag",
+  "read": "Read",
+  "postComment": "Post Comment",
+  "writeComment": "Write your comment..."
 }

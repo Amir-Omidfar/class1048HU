@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import api from "../utils/api";
 
 interface CommentFormProps {
@@ -7,6 +8,7 @@ interface CommentFormProps {
 }
 
 export default function CommentForm({ postId, onCommentAdded }: CommentFormProps) {
+  const { t } = useTranslation();
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,14 +31,14 @@ export default function CommentForm({ postId, onCommentAdded }: CommentFormProps
   return (
     <form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
       <textarea
+        placeholder={t("writeComment")}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Write your comment..."
         rows={3}
         style={{ width: "100%", padding: "0.5rem" }}
       />
       <button type="submit" disabled={loading} style={{ marginTop: "0.5rem" }}>
-        {loading ? "Posting..." : "Post Comment"}
+        {t("postComment")}
       </button>
     </form>
   );

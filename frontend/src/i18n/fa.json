@@ -6,5 +6,9 @@
   "create_post": "ایجاد پست",
   "posts": "پست‌ها",
   "comments": "نظرات",
-  "submit": "ثبت"
+  "submit": "ثبت",
+  "tag": "برچسب",
+  "read": "بخوانید",
+  "postComment": "ارسال نظر",
+  "writeComment": "نظر خود را بنویسید ..."
 }
