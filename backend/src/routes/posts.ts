@@ -84,4 +84,22 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
   }
 
 });
+
+// Delete a post
+router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = (req as any).user?.id;
+
+  try {
+    const result = await pool.query(
+      `DELETE FROM posts 
+       WHERE id = $1 AND author_id = $2 RETURNING *`, 
+       [id, userId]
+    );
+    if (result.rows.length === 0) return res.status(403).json({ error: "Not found or not authorized" });
+    res.json({ message: "Post deleted" });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;
