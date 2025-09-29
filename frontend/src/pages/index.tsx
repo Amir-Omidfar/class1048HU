@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import PostCard from "../components/PostCard";
 import api from "../utils/api";
+import { useTranslation } from "react-i18next";
+import Link from "next/link";
 
 interface Post {
   id: number;
@@ -16,7 +18,7 @@ export default function Home() {
   const [language, setLanguage] = useState<string>("");
   const [tag, setTag] = useState<string>("");
   const [search, setSearch] = useState<string>("");
-
+  const { t } = useTranslation();
   const [token, setToken] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -63,8 +65,15 @@ export default function Home() {
           <input placeholder="search" value={search} onChange={(e)=>setSearch(e.target.value)} />
           <button onClick={fetchPosts}>Search</button>
         </div>
-
-        <div>
+        <div style={{ padding: 20 }}>
+          {/* Show create post button only when logged in */}
+          {token && (
+            <div style={{ marginBottom: "1rem" }}>
+              <Link href="/create-post">
+                <button>{t("createPost")}</button>
+              </Link>
+            </div>
+          )}
           {posts.map(p => <PostCard key={p.id} post={p} />)}
         </div>
       </div>

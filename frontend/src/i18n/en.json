@@ -1,5 +1,6 @@
 {
   "title": "1048 HU Website",
+  "postTitle": "Post Title",
   "login": "Log in",
   "register": "Register",
   "logout": "Log out",
@@ -10,5 +11,7 @@
   "tag": "Tag",
   "read": "Read",
   "postComment": "Post Comment",
-  "writeComment": "Write your comment..."
+  "writePost": "Write your post...",
+  "writeComment": "Write your comment...",
+  "createPost": "Create a new post"
 }
