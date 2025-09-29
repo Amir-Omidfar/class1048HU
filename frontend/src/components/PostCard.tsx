@@ -2,17 +2,9 @@ import Link from "next/link";
 import React from "react";
 import {useTranslation} from "react-i18next";
 
-interface Post{
-  id: number;
-  title: string;
-  content: string;
-  tags: string[];
-  language: string;
-}
-
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post }: { post: any }) {
   const { t } = useTranslation();
-
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   return (
     <div style={{ border: "1px solid #ddd", marginBottom: 12, padding: 12 }}>
       <h3>
@@ -25,6 +17,8 @@ export default function PostCard({ post }: { post: Post }) {
         {t("tag")}: {(post.tags || []).join(", ")}
       </div>
       <Link href={`/posts/${post.id}`}>{t("read")}</Link>
+      {" "}
+      {token && <Link href={`/edit-post/${post.id}`}>{t("editPost")}</Link>}
     </div>
   );
 }

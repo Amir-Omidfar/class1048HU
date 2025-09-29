@@ -13,5 +13,6 @@
   "postComment": "ارسال نظر",
   "writePost": "پست خود را بنویسید ...",
   "writeComment": "نظر خود را بنویسید ...",
-  "createPost": "ایجاد پست جدید"
+  "createPost": "ایجاد پست جدید",
+  "editPost" : "ویرایش پست"
 }

@@ -62,4 +62,26 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Update a post
+router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { title, content, tags, language } = req.body;
+  const userId = (req as any).user?.id;
+
+  try{
+    const result = await pool.query(
+      `UPDATE posts
+       SET title = $1, content = $2, tags = $3, language = $4
+       WHERE id = $5 AND author_id = $6
+       RETURNING *`,
+      [title, content, tags || [], language || "en", id, userId]
+    );
+    if (result.rows.length === 0) return res.status(403).json({ error: "Not found or not authorized" });
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update the post" });
+  }
+
+});
 module.exports = router;

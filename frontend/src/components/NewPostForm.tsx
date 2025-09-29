@@ -1,80 +1,82 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import React, { useState } from "react";
 import api from "../utils/api";
-import { useTranslation } from "react-i18next";
-import axios from "axios";
 
+interface Post {
+  id?: number;
+  title: string;
+  content: string;
+  tags: string[];
+  language: string;
+}
 
+interface Props {
+  post?: Post; // 👈 make it optional for new vs edit
+}
 
-export default function NewPostForm() {
-  const {t, i18n} = useTranslation();
-  const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState("");
-  const [language, setLanguage] = useState("");
+export default function NewPostForm({ post }: Props) {
+  const [title, setTitle] = useState(post?.title || "");
+  const [content, setContent] = useState(post?.content || "");
+  const [tags, setTags] = useState(post?.tags?.join(", ") || "");
+  const [language, setLanguage] = useState(post?.language || "en");
+
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    const payload = {
+      title,
+      content,
+      tags: tags.split(",").map((t) => t.trim()),
+      language,
+    };
+
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert(t("You must be logged in to create a post."));
-        return;
+      if (post?.id) {
+        // update existing post
+        await api.put(`/posts/${post.id}`, payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("Post updated!");
+      } else {
+        // create new post
+        await api.post("/posts", payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        alert("Post created!");
       }
-      await api.post("/posts", {
-        title,
-        content,
-        tags: tags.split(",").map(tag => tag.trim()),
-        language
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      router.push("/");
+      window.location.href = "/";
     } catch (err) {
-      console.error("Failed to create post", err);
-      alert(t("Failed to create post"));
+      console.error(err);
+      alert("Error saving post");
     }
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: 12, padding: 20 }}
-    >
-      <h1>{t("createPost")}</h1>
-
+    <form onSubmit={handleSubmit}>
       <input
-        type="text"
-        placeholder={t("postTitle")}
+        placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
       />
-
       <textarea
-        placeholder={t("writePost")}
+        placeholder="Content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        rows={6}
         required
       />
-
       <input
-        type="text"
-        placeholder={t("tag")}
+        placeholder="Tags (comma separated)"
         value={tags}
         onChange={(e) => setTags(e.target.value)}
       />
-
       <select value={language} onChange={(e) => setLanguage(e.target.value)}>
         <option value="en">English</option>
-        <option value="fa">فارسی</option>
+        <option value="fa">Farsi</option>
       </select>
-
-      <button type="submit">{t("createPost")}</button>
+      <button type="submit">{post ? "Update Post" : "Create Post"}</button>
     </form>
   );
 }

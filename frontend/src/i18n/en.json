@@ -13,5 +13,6 @@
   "postComment": "Post Comment",
   "writePost": "Write your post...",
   "writeComment": "Write your comment...",
-  "createPost": "Create a new post"
+  "createPost": "Create a new post",
+  "editPost": "Edit Post"
 }
