@@ -54,12 +54,13 @@ export default function NewPostForm({ post }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem", width:"30vw"}}>
       <input
         placeholder="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
+        
       />
       <textarea
         placeholder="Content"
@@ -67,16 +68,20 @@ export default function NewPostForm({ post }: Props) {
         onChange={(e) => setContent(e.target.value)}
         required
       />
-      <input
-        placeholder="Tags (comma separated)"
-        value={tags}
-        onChange={(e) => setTags(e.target.value)}
-      />
-      <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-        <option value="en">English</option>
-        <option value="fa">Farsi</option>
-      </select>
-      <button type="submit">{post ? "Update Post" : "Create Post"}</button>
+      <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
+
+        <input
+          placeholder="Tags (comma separated)"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          />
+        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+          <option value="en">English</option>
+          <option value="fa">Farsi</option>
+        </select>
+        <button type="submit">{post ? "Update Post" : "Create Post"}</button>
+        
+      </div>
     </form>
   );
 }
