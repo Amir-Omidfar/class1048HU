@@ -1,59 +1,50 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
+import api from "../utils/api";
+import Link from "next/link";
 
-export default function Dashboard() {
-  const [user, setUser] = useState<any>(null);
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  created_at: string;
+}
+
+export default function DashboardPage() {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const fetchPosts = async () => {
+    try {
+      const res = await api.get("/posts");
+      setPosts(res.data);
+    } catch (err) {
+      console.error("Failed to fetch posts", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
-
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(`${API_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(res.data);
-      } catch (err) {
-        console.error("Error fetching user:", err);
-        router.push("/login"); // if token invalid → redirect
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [router, API_URL]);
+    fetchPosts();
+  }, []);
 
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div style={{ maxWidth: 600, margin: "2rem auto" }}>
+    <div style={{ padding: "2rem" }}>
       <h1>Dashboard</h1>
-      {user ? (
-        <>
-          <p>Welcome, <strong>{user.username}</strong> 🎉</p>
-          <button
-            onClick={() => {
-              localStorage.removeItem("token");
-              router.push("/login");
-            }}
-            style={{ marginTop: "1rem" }}
-          >
-            Logout
-          </button>
-        </>
-      ) : (
-        <p>Not logged in.</p>
-      )}
+      <Link href="/new-post">➕ Create New Post</Link>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            <Link href={`/posts/${post.id}`}>
+              {post.title} ({new Date(post.created_at).toLocaleDateString()})
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

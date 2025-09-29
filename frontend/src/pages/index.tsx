@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import PostCard from "../components/PostCard";
+import api from "../utils/api";
 
 interface Post {
   id: number;
@@ -27,14 +28,18 @@ export default function Home() {
   }, []);
 
   async function fetchPosts() {
-    const params = new URLSearchParams();
-    if (language) params.set("language", language);
-    if (tag) params.set("tag", tag);
-    if (search) params.set("search", search);
+    try {
+      const params: Record<string, string> = {};
+      if (language) params.language = language;
+      if (tag) params.tag = tag;
+      if (search) params.search = search;
 
-    const res = await fetch(`http://localhost:5001/posts?${params.toString()}`);
-    const data = await res.json();
-    setPosts(data);
+      const query = new URLSearchParams(params).toString();
+      const res = await api.get(`/posts?${query}`); // <-- use api instance
+      setPosts(res.data);
+    } catch (err) {
+      console.error("Failed to fetch posts", err);
+    }
   }
 
   function onLogout() {

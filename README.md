@@ -109,14 +109,14 @@ curl -X POST http://localhost:5001/auth/register \
 ```
 Login -> Get
 ```
-curl -X POST http://localhost:5000/auth/login \
+curl -X POST http://localhost:5001/auth/login \
  -H "Content-Type: application/json" \
  -d '{"username":"test","password":"test123"}'
 # response: {"token":"..."}
 ```
 Create a post:
 ```
-curl -X POST http://localhost:5000/posts \
+curl -X POST http://localhost:5001/posts \
  -H "Content-Type: application/json" \
  -H "Authorization: Bearer YOURTOKEN" \
  -d '{"title":"سلام دنیا","content":"این پست فارسی است","tags":["intro","farsi"],"language":"fa"}'
@@ -124,17 +124,35 @@ curl -X POST http://localhost:5000/posts \
 ```
 Get posts
 ```
-curl "http://localhost:5000/posts?language=fa&tag=intro&search=سلام"
+curl "http://localhost:5001/posts?language=fa&tag=intro&search=سلام"
 
 ```
 Add a comment:
 ```
-curl -X POST http://localhost:5000/comments \
+curl -X POST http://localhost:5001/comments \
  -H "Content-Type: application/json" \
  -H "Authorization: Bearer YOURTOKEN" \
  -d '{"postId":1,"text":"عالی بود!","language":"fa"}'
 ```
 Get comments:
 ```
-curl "http://localhost:5000/comments/1?language=fa"
+curl "http://localhost:5001/comments/1?language=fa"
 ```
+
+## 6 -- Frontend (Next.js) -- minimal app with i18n
+```
+cd frontend
+npm install
+```
+## 7 -- Running the whole project
+### Backend
+1. ```cd backend```
+2. create ```.env``` from ```.env.example```
+3. ```npm install``` 
+4. create DB/run migration
+5. ```npm run dev (requires ts-node-dev) or npx ts-node src/index.ts```
+### Frontend
+1. ```cd frontend```
+2. ```npm install```
+3. ```npm run dev```
+4. open http://localhost:3000

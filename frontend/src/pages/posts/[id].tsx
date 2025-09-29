@@ -1,48 +1,69 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Navbar from "../../components/Navbar";
-import CommentList from "../../components/CommentList";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import api from "../../utils/api";
 import CommentForm from "../../components/CommentForm";
 
-export default function PostPage() {
-  const router = useRouter();
-  const { id } = router.query;
-  const [post, setPost] = useState<any>(null);
-  const [comments, setComments] = useState<any[]>([]);
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") || undefined : undefined;
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  
-  useEffect(() => {
-    if (id) {
-      fetchPost();
-      fetchComments();
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  created_at: string;
+}
+
+interface Comment {
+  id: number;
+  text: string;
+  user_id: number;
+  created_at: string;
+}
+
+export default function PostDetailPage() {
+  const { id } = useParams();
+  const [post, setPost] = useState<Post | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchData = async () => {
+    try {
+      const postRes = await api.get(`/posts/${id}`);
+      setPost(postRes.data);
+
+      const commentsRes = await api.get(`/comments/${id}`);
+      setComments(commentsRes.data);
+    } catch (err) {
+      console.error("Failed to fetch post or comments", err);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (id) fetchData();
   }, [id]);
 
-  async function fetchPost() {
-    const res = await fetch(`${API_URL}/posts/${id}`);
-    setPost(await res.json());
-  }
-  async function fetchComments() {
-    const res = await fetch(`${API_URL}/posts/${id}/comments`);
-    setComments(await res.json());
-  }
-
-  function onLogout() { localStorage.removeItem("token"); location.reload(); }
-
-  if (!post) return <div>Loading...</div>;
-
+  if (loading) return <p>Loading...</p>;
+  if (!post) return <p>Post not found</p>;
+  if (!id) return <p>Invalid post ID</p>;
   return (
-    <div>
-      <Navbar onLogout={onLogout} token={token} />
-      <div style={{ padding: 20 }}>
-        <h1>{post.title}</h1>
-        <div>{post.content}</div>
-        <hr />
-        <h3>Comments</h3>
-        <CommentList comments={comments} />
-        {token ? <CommentForm postId={post.id} onAdded={fetchComments} token={token} /> : <div>Please login to comment</div>}
-      </div>
+    <div style={{ padding: "2rem" }}>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+      <p>
+        <small>Posted on {new Date(post.created_at).toLocaleString()}</small>
+      </p>
+
+      <h2>Comments</h2>
+      <ul>
+        {comments.map((c) => (
+          <li key={c.id}>
+            {c.text} (by user {c.user_id})
+          </li>
+        ))}
+      </ul>
+
+      <CommentForm postId={id as string} onCommentAdded={fetchData} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 
 interface CommentFormProps {
   postId: string | number;
@@ -10,20 +10,13 @@ export default function CommentForm({ postId, onCommentAdded }: CommentFormProps
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
 
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `${API_URL}/comments`,
-        { postId, text },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post("/comments", { postId, text });
       setText("");
       onCommentAdded();
     } catch (err) {

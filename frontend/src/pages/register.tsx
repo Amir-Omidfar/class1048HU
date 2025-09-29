@@ -1,59 +1,54 @@
+"use client";
+
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import api from "../utils/api";
 
-type RegisterForm = {
-  username: string;
-  password: string;
-};
-
-export default function Register() {
-  const { register, handleSubmit } = useForm<RegisterForm>();
-  const [error, setError] = useState<string | null>(null);
+export default function RegisterPage() {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-  const onSubmit = async (data: RegisterForm) => {
     try {
-      await axios.post(`${API_URL}/auth/register`, data);
-      alert("✅ Registration successful! You can log in now.");
+      await api.post("/auth/register", { username, password });
+      alert("✅ Registration successful! Please log in.");
       router.push("/login");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Registration failed");
+      alert(err.response?.data?.error || "❌ Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "2rem auto" }}>
+    <div style={{ padding: "2rem" }}>
       <h1>Register</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label>Username</label>
-          <input
-            type="text"
-            {...register("username", { required: true })}
-            placeholder="Enter your username"
-          />
-        </div>
-
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            {...register("password", { required: true, minLength: 6 })}
-            placeholder="Enter a password"
-          />
-        </div>
-
-        <button type="submit" style={{ marginTop: "1rem" }}>
-          Register
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+        <br />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <br />
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
         </button>
       </form>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }
