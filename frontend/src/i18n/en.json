@@ -14,5 +14,8 @@
   "writePost": "Write your post...",
   "writeComment": "Write your comment...",
   "createPost": "Create a new post",
-  "editPost": "Edit Post"
+  "editPost": "Edit Post",
+  "delete": "Delete",
+  "confirmDelete": "Are you sure you want to delete this post?",
+  "deleteFailed": "Failed to delete post"
 }
