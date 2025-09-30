@@ -1,3 +1,12 @@
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Chip,
+  Button,
+  Stack,
+} from "@mui/material";
 import Link from "next/link";
 import React from "react";
 import {useTranslation} from "react-i18next";
@@ -19,7 +28,6 @@ export default function PostCard({ post, currentUserId, onDelete }: {
   onDelete?: (id: number) => void;
 }) {
   const { t } = useTranslation();
-
   async function handleDelete() {
     if (!confirm(t("confirmDelete") || "Are you sure you want to delete this post?")) return;
     try {
@@ -35,29 +43,37 @@ export default function PostCard({ post, currentUserId, onDelete }: {
   }
 
   return (
-    <div style={{ border: "1px solid #ddd", marginBottom: 12, padding: 12 }}>
-      <h3>
-        {post.title} <small>({post.language})</small>
-      </h3>
-      <p>
-        {post.content.slice(0, 250)}
-        {post.content.length > 250 && "..."}
-      </p>
-      <div>
-        {t("tags")}: {(post.tags || []).join(", ")}
-      </div>
-      <Link href={`/posts/${post.id}`}>{t("read")}</Link>
-
-      {currentUserId === post.user_id && (
-        <div style={{ marginTop: 8 }}>
-          <Link href={`/edit-post/${post.id}`}>
-            <button>{t("edit")}</button>
-          </Link>
-          <button onClick={handleDelete} style={{ marginLeft: 8 }}>
-            {t("delete")}
-          </button>
-        </div>
-      )}
-    </div>
+    <Card sx={{ mb: 2 }}>
+       <CardContent>
+        <Typography variant="h6">{post.title} <small>({post.language})</small></Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          {post.content.slice(0, 250)}
+          {post.content.length > 250 && "..."}
+        </Typography>
+        {post.tags?.length > 0 && (
+          <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
+            <Typography variant="subtitle2">{t("tag")}:</Typography>
+            {post.tags.map((tg, idx) => (
+              <Chip key={idx} label={tg} size="small" color="primary" />
+            ))}
+          </Stack>
+        )}
+      </CardContent>
+      <CardActions>
+        <Button size="small" component={Link} href={`/posts/${post.id}`} variant="contained">
+            {t("read")}
+        </Button>
+        {currentUserId === post.user_id && (
+          <>
+            <Button size="small" component={Link} href={`/edit-post/${post.id}`} variant="outlined">
+              {t("edit")}
+            </Button>
+            <Button size="small" onClick={handleDelete} color="error">
+              {t("delete")}
+            </Button>
+          </>
+        )}
+      </CardActions>
+    </Card>
   );
 }
