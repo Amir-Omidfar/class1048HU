@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-
+import {Button, TextField} from "@mui/material";
 export default function Navbar({ onLogout, token }: { onLogout: ()=>void, token?: string}) {
   const { t, i18n } = useTranslation();
 
@@ -15,10 +15,18 @@ export default function Navbar({ onLogout, token }: { onLogout: ()=>void, token?
 
   return (
     <nav style={{ display: "flex", justifyContent: "space-between", padding: "1rem" }}>
-      <div>{t("title")}</div>
-      <div>
-  <button onClick={toggleLang}>{(i18n.language === "en" ? "FA" : "EN")}</button>
-        {token ? <button onClick={onLogout}>{t("logout")}</button> : <>
+      <TextField
+        slotProps={{
+          input: {
+            readOnly: true
+          }
+        }}
+          //label={t("title")}
+          value={t("title")}
+        />
+      <div style={{justifyContent: "space-between"}}>
+        <Button variant="contained" onClick={toggleLang}>{(i18n.language === "en" ? "FA" : "EN")}</Button>
+        {token ? <Button variant="outlined" onClick={onLogout}>{t("logout")}</Button> : <>
           <a href="/login">{t("login")}</a>{" "}
           <a href="/register">{t("register")}</a>
         </>}
