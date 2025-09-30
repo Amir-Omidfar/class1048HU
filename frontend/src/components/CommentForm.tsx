@@ -45,19 +45,6 @@ export default function CommentForm({ postId, onCommentAdded }: CommentFormProps
             {t("postComment")}
           </Button>
       </Stack>
-      
-      {/*
-      <textarea
-        placeholder={t("writeComment")}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        rows={3}
-        style={{ width: "100%", padding: "0.5rem" }}
-      />
-      <button type="submit" disabled={loading} style={{ marginTop: "0.5rem" }}>
-        {t("postComment")}
-    </button>*/}
-  
     </form>
   );
 }
