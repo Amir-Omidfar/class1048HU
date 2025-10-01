@@ -22,5 +22,9 @@
   "confirmDelete": "Are you sure you want to delete this post?",
   "deleteFailed": "Failed to delete post",
   "search": "Search",
-  "keywords": "Keywords"
+  "keywords": "Keywords",
+  "postedOn": "Posted on",
+  "authorID": "Author ID",
+  "unknown": "Unknown",
+  "byUser": "by user"
 }
