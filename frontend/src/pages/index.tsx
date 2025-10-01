@@ -70,10 +70,10 @@ export default function Home() {
                   <MenuItem value="en">English</MenuItem>
                   <MenuItem value="fa">Farsi</MenuItem>
                 </TextField>
-                <TextField placeholder="tag" value={tag} onChange={(e)=>setTag(e.target.value)} /> {""}
-                <TextField placeholder="search" value={search} onChange={(e)=>setSearch(e.target.value)} />{" "}
+                <TextField placeholder={t("tag")} value={tag} onChange={(e)=>setTag(e.target.value)} /> {""}
+                <TextField placeholder={t("keywords")} value={search} onChange={(e)=>setSearch(e.target.value)} />{" "}
               </Stack>
-              <Button variant="outlined" onClick={fetchPosts}>Search</Button>
+              <Button variant="outlined" onClick={fetchPosts}>{t("search")}</Button>
             </div> 
             <div>
               {/* Show create post button only when logged in */}
