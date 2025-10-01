@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Router from "next/router";
 import api from "../utils/api";
-import {Button, TextField, Stack} from "@mui/material";
+import { useTranslation } from "react-i18next";
+import {Button, TextField, Stack, Typography} from "@mui/material";
 
 export default function Login() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,7 +31,7 @@ export default function Login() {
 
   return (
     <form onSubmit={submit} style={{padding:10}}>
-      <h2>LOGIN PAGE</h2>
+      <Typography variant="h2" gutterBottom>{t("loginPage")}</Typography>
       <Stack spacing={2} style={{marginBottom:10}} direction="row">
       <TextField placeholder="username" value={username} onChange={e=>setUsername(e.target.value)} />
       <TextField placeholder="password" type="password" value={password} onChange={e=>setPassword(e.target.value)} />

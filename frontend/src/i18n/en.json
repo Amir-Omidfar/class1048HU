@@ -26,5 +26,6 @@
   "postedOn": "Posted on",
   "authorID": "Author ID",
   "unknown": "Unknown",
-  "byUser": "by user"
+  "byUser": "by user",
+  "loginPage": "LOGIN PAGE"
 }
