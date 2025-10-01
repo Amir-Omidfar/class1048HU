@@ -24,11 +24,11 @@ export default function Navbar({ onLogout, token }: { onLogout: ()=>void, token?
           //label={t("title")}
           value={t("title")}
         />
-      <div style={{justifyContent: "space-between"}}>
-        <Button variant="contained" onClick={toggleLang}>{(i18n.language === "en" ? "FA" : "EN")}</Button>
+      <div >
+        <Button variant="contained" onClick={toggleLang}>{(i18n.language === "en" ? "FA" : "EN")}</Button> {""}
         {token ? <Button variant="outlined" onClick={onLogout}>{t("logout")}</Button> : <>
-          <a href="/login">{t("login")}</a>{" "}
-          <a href="/register">{t("register")}</a>
+          <Button variant="outlined" href="/login">{t("login")}</Button>{" "}
+          <Button variant="outlined" href="/register">{t("register")}</Button>
         </>}
       </div>
     </nav>
