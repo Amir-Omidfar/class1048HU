@@ -4,6 +4,7 @@ import PostCard from "../components/PostCard";
 import api from "../utils/api";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import {Button, TextField, Menu, MenuItem} from "@mui/material";
 
 interface Post {
   id: number;
@@ -55,22 +56,27 @@ export default function Home() {
     <div>
       <Navbar onLogout={onLogout} token={token} />
       <div style={{ padding: 20 }}>
-        <div style={{ marginBottom: 12 }}>
-          <select value={language} onChange={(e)=>setLanguage(e.target.value)}>
-            <option value="">All languages</option>
-            <option value="en">English</option>
-            <option value="fa">Farsi</option>
-          </select>
-          <input placeholder="tag" value={tag} onChange={(e)=>setTag(e.target.value)} />
-          <input placeholder="search" value={search} onChange={(e)=>setSearch(e.target.value)} />
-          <button onClick={fetchPosts}>Search</button>
+        <div style={{ marginBottom: 2 }}>
+          <TextField
+            select
+            label={language}
+            value={t("languageName")}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="en">English</MenuItem>
+            <MenuItem value="fa">Farsi</MenuItem>
+          </TextField>
+          <TextField placeholder="tag" value={tag} onChange={(e)=>setTag(e.target.value)} /> {""}
+          <TextField placeholder="search" value={search} onChange={(e)=>setSearch(e.target.value)} />{" "}
+          <Button variant="outlined" onClick={fetchPosts}>Search</Button>
         </div>
         <div style={{ padding: 20 }}>
           {/* Show create post button only when logged in */}
           {token && (
             <div style={{ marginBottom: "1rem" }}>
               <Link href="/create-post">
-                <button>{t("createPost")}</button>
+                <Button variant="outlined">{t("createPost")}</Button>
               </Link>
             </div>
           )}
