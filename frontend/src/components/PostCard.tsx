@@ -60,20 +60,22 @@ export default function PostCard({ post, currentUserId, onDelete }: {
         )}
       </CardContent>
       <CardActions>
-        <Button size="small" component={Link} href={`/posts/${post.id}`} variant="contained">
-            {t("read")}
+  <Stack direction="row" spacing={1}>
+    <Button size="small" component={Link} href={`/posts/${post.id}`} variant="contained">
+      {t("read")}
+    </Button>
+    {currentUserId === post.user_id && (
+      <>
+        <Button size="small" component={Link} href={`/edit-post/${post.id}`} variant="outlined">
+          {t("edit")}
         </Button>
-        {currentUserId === post.user_id && (
-          <>
-            <Button size="small" component={Link} href={`/edit-post/${post.id}`} variant="outlined">
-              {t("edit")}
-            </Button>
-            <Button size="small" onClick={handleDelete} color="error">
-              {t("delete")}
-            </Button>
-          </>
-        )}
-      </CardActions>
+        <Button size="small" onClick={handleDelete} color="error" variant="outlined">
+          {t("delete")}
+        </Button>
+      </>
+    )}
+  </Stack>
+</CardActions>
     </Card>
   );
 }
