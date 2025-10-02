@@ -27,5 +27,6 @@
   "authorID": "شناسه نویسنده",
   "unknown": "ناشناس",
   "byUser": "توسط کاربر",
-  "loginPage": "صفحه ورود"
+  "loginPage": "صفحه ورود",
+  "registerPage": "صفحه ثبت نام"
 }

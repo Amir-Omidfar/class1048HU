@@ -27,5 +27,6 @@
   "authorID": "Author ID",
   "unknown": "Unknown",
   "byUser": "by user",
-  "loginPage": "LOGIN PAGE"
+  "loginPage": "LOGIN PAGE",
+  "registerPage": "REGISTER PAGE"
 }

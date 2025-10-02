@@ -1,5 +1,5 @@
 "use client";
-
+import { useAuth } from "../hooks/useAuth";
 import { useEffect, useState } from "react";
 import api from "../utils/api";
 import Link from "next/link";
@@ -12,6 +12,7 @@ interface Post {
 }
 
 export default function DashboardPage() {
+  
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 

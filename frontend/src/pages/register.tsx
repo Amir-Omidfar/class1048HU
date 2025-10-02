@@ -1,45 +1,49 @@
 "use client";
-
 import { useState } from "react";
+import { supabase } from "../utils/supabaseClient";
 import { useRouter } from "next/navigation";
-import api from "../utils/api";
-import {Button, TextField, Stack, Typography} from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { Button, TextField, Stack, Typography } from "@mui/material";
 
-export default function RegisterPage() {
+export default function Register() {
+  const { t } = useTranslation();
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      await api.post("/auth/register", { username, password });
-      alert("✅ Registration successful! Please log in.");
-      router.push("/login");
-    } catch (err: any) {
-      alert(err.response?.data?.error || "❌ Registration failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div style={{ padding: "2rem", width: "40vw"}}>
-      <Typography variant="h2" gutterBottom>Register Page</Typography>
-      <form onSubmit={handleRegister}>
-        <Stack spacing={2} style={{marginBottom:10}} direction="column">
-          <TextField  placeholder="Username" value={username} onChange={e=>setUsername(e.target.value)} required />
-          <TextField  placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} required />
-          <Button type="submit" disabled={loading} variant="outlined">
-            {loading ? "Registering..." : "Register"}
-          </Button>
+    const { data, error} = await supabase.auth.signUp({email, password});
+    if (error) {
+        setError(error.message);
+        } else {
+        alert("✅ Registration successful! Please check your email to confirm your account.");
+        router.push("/login");
+        }
+    };
+    return (
+        <form onSubmit={handleRegister}>
+        <Typography variant="h2" gutterBottom>{t("registerPage")}</Typography>
+        <Stack spacing={2} style={{marginBottom:10, width:500}} direction="column">
+            <TextField
+            type="email"
+            placeholder={t("email")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            />
+            <TextField
+            type="password"
+            placeholder={t("password")}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            />
+            <Button variant="outlined" type="submit">Register</Button>
+            {error && <p style={{ color: "red" }}>{error}</p>}
         </Stack>
-
-        
-      </form>
-    </div>
-  );
+      
+    </form>
+    );
 }
