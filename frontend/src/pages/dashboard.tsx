@@ -14,24 +14,21 @@ interface Post {
 export default function DashboardPage() {
   
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchPosts = async () => {
-    try {
-      const res = await api.get("/posts");
-      setPosts(res.data);
-    } catch (err) {
-      console.error("Failed to fetch posts", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { user, loading } = useAuth(true); // ← redirect if not logged in
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    const fetchPosts = async () => {
+      try {
+        const res = await api.get("/posts");
+        setPosts(res.data);
+      } catch (err) {
+        console.error("Failed to fetch posts", err);
+      }
+    };
+    if (user) fetchPosts(); // only fetch posts once user is available
+  }, [user]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading...</p>; // waiting for auth
 
   return (
     <div style={{ padding: "2rem" }}>
