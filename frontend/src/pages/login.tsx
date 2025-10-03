@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
 import { useTranslation } from "react-i18next";
 import {Button, TextField, Stack, Typography} from "@mui/material";
@@ -23,7 +23,7 @@ export default function Login() {
       setError(error.message);
     } else {
       // Supabase handles JWT in localStorage automatically
-      router.push("/");
+      router.push("/dashboard");
     }
   };
 
