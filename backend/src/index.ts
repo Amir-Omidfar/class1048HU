@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -12,9 +13,25 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Use clerkMiddleware to set up request.auth (or req.auth) context
+app.use(clerkMiddleware());
+
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
+
+// Example of a protected route
+app.get("/protected", requireAuth(), (req: any, res: Response) => {
+  const { userId } = getAuth(req);
+  res.json({
+    message: "You are authenticated",
+    userId,
+  });
+});
+
+// 🧱 Example: Protect specific route groups
+// If your postRoutes include create/update/delete, you can apply Clerk protection like this:
+// app.use("/posts", ClerkExpressRequireAuth(), postRoutes);
 
 // Error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

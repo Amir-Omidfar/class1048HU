@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
-const authMiddleware = require("../middleware/authMiddleware");
+import { requireAuth, getAuth } from "@clerk/express";
+import { get } from "http";
 const { pool } = require("../db");
 
 const router = Router();
 
 // Add comment
-router.post("/", authMiddleware, async (req: Request, res: Response) => {
+router.post("/", requireAuth(), async (req: Request, res: Response) => {
   const { postId, text, language } = req.body;
-  const userId = (req as any).user?.id;
+  const userId = getAuth(req).userId;
   if (!userId) return res.status(401).json({ error: "Auth required" });
 
   try {
@@ -47,5 +48,24 @@ router.get("/:postId", async (req: Request, res: Response) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Delete comment
+router.delete("/:id", requireAuth(), async (req: Request, res: Response) => {
+  const userId = getAuth(req).userId;
+  if (!userId) return res.status(401).json({ error: "Auth required" });
+
+  try {
+    // Ensure the comment belongs to the user
+    const commentResult = await pool.query("SELECT * FROM comments WHERE id = $1", [req.params.id]);
+    if (commentResult.rows.length === 0) return res.status(404).json({ error: "Not found" });
+    if (commentResult.rows[0].user_id !== userId) return res.status(403).json({ error: "Forbidden" });
+
+    await pool.query("DELETE FROM comments WHERE id = $1", [req.params.id]);
+    res.json({ message: "Comment deleted" });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;

@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
-const authMiddleware = require("../middleware/authMiddleware");
+import { requireAuth, getAuth } from "@clerk/express";
+import { get } from "http";
 const { pool } = require("../db");
 
 const router = Router();
 
 // Create a post
-router.post("/", authMiddleware, async (req: Request, res: Response) => {
+router.post("/", requireAuth(), async (req: Request, res: Response) => {
   const { title, content, tags, language } = req.body;
-  const userId = (req as any).user?.id;
+  const userId = getAuth(req).userId;
   if (!userId) return res.status(401).json({ error: "Auth required" });
 
   try {
@@ -63,10 +64,10 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // Update a post
-router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
+router.put("/:id", requireAuth(), async (req: Request, res: Response) => {
   const { id } = req.params;
   const { title, content, tags, language } = req.body;
-  const userId = (req as any).user?.id;
+  const userId = getAuth(req).userId;
 
   try{
     const result = await pool.query(
@@ -86,9 +87,9 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
 });
 
 // Delete a post
-router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
+router.delete("/:id", requireAuth(), async (req: Request, res: Response) => {
   const { id } = req.params;
-  const userId = (req as any).user?.id;
+  const userId = getAuth(req).userId;
 
   try {
     const result = await pool.query(
