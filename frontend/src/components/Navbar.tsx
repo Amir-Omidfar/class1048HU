@@ -1,13 +1,16 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {Button, TextField} from "@mui/material";
-export default function Navbar({ onLogout, token }: { onLogout: ()=>void, token?: string}) {
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
+
+
+export default function Navbar() {
   const { t, i18n } = useTranslation();
 
   function toggleLang() {
     const next = i18n.language === "en" ? "fa" : "en";
     i18n.changeLanguage(next);
-    // set dir if fa: (guard document for SSR)
     if (typeof document !== "undefined") {
       document.documentElement.dir = next === "fa" ? "rtl" : "ltr";
     }
@@ -15,21 +18,18 @@ export default function Navbar({ onLogout, token }: { onLogout: ()=>void, token?
 
   return (
     <nav style={{ display: "flex", justifyContent: "space-between", padding: "1rem" }}>
-      <TextField
-        slotProps={{
-          input: {
-            readOnly: true
-          }
-        }}
-          //label={t("title")}
-          value={t("title")}
-        />
-      <div >
-        <Button variant="contained" onClick={toggleLang}>{(i18n.language === "en" ? "FA" : "EN")}</Button> {""}
-        {token ? <Button variant="outlined" onClick={onLogout}>{t("logout")}</Button> : <>
-          <Button variant="outlined" href="/login">{t("login")}</Button>{" "}
-          <Button variant="outlined" href="/register">{t("register")}</Button>
-        </>}
+      <div>{t("title")}</div>
+      <div>
+        <Button variant="contained" onClick={toggleLang}>{i18n.language === "en" ? "FA" : "EN"}</Button>
+
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+
+        <SignedOut>
+          <Button  href="/sign-in">{t("login")}</Button>{" "}
+          <Button  href="/sign-up">{t("register")}</Button>
+        </SignedOut>
       </div>
     </nav>
   );
