@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import {Button, TextField} from "@mui/material";
+import {Button, Stack} from "@mui/material";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ export default function Navbar() {
   return (
     <nav style={{ display: "flex", justifyContent: "space-between", padding: "1rem" }}>
       <div>{t("title")}</div>
-      <div>
+      <Stack direction="row" spacing={2}>
         <Button variant="contained" onClick={toggleLang}>{i18n.language === "en" ? "FA" : "EN"}</Button>
 
         <SignedIn>
@@ -30,7 +30,7 @@ export default function Navbar() {
           <Button  href="/sign-in">{t("login")}</Button>{" "}
           <Button  href="/sign-up">{t("register")}</Button>
         </SignedOut>
-      </div>
+      </Stack>
     </nav>
   );
 }

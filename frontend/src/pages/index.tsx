@@ -5,6 +5,7 @@ import api from "../utils/api";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import {Button, TextField, Stack, MenuItem} from "@mui/material";
+import { useUser } from "@clerk/nextjs";
 
 interface Post {
   id: number;
@@ -20,15 +21,11 @@ export default function Home() {
   const [tag, setTag] = useState<string>("");
   const [search, setSearch] = useState<string>("");
   const { t } = useTranslation();
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const { isSignedIn } = useUser();
 
   useEffect(() => {
     fetchPosts();
-    // read token on client only to avoid SSR/client markup mismatch
-    if (typeof window !== "undefined") {
-      setToken(localStorage.getItem("token") || undefined);
-    }
-  }, []);
+  }, [language, tag, search]);
 
   async function fetchPosts() {
     try {
@@ -45,16 +42,10 @@ export default function Home() {
     }
   }
 
-  function onLogout() {
-    localStorage.removeItem("token");
-  setToken(undefined);
-  // optionally reload to reset app state
-  // location.reload();
-  }
-
+  
   return (
     <div>
-      <Navbar onLogout={onLogout} token={token} />
+      <Navbar />
       <div style={{padding:20}}>
       <div>
         <div style={{ marginBottom: 2 }}>
@@ -77,7 +68,7 @@ export default function Home() {
             </div> 
             <div>
               {/* Show create post button only when logged in */}
-              {token && (
+              {isSignedIn && (
                 <div style={{ marginBottom: "1rem" }}>
                   <Link href="/create-post">
                     <Button variant="outlined">{t("createPost")}</Button>
