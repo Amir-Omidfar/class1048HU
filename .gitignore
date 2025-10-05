@@ -57,3 +57,31 @@ out
 
 # Mac
 .DS_Store
+*.json
+backend/node_modules/@types/node/assert.d.ts
+backend/package-lock.json
+backend/package.json
+backend/node_modules/.package-lock.json
+backend/node_modules/@types/node/assert.d.ts
+backend/node_modules/@types/node/events.d.ts
+backend/node_modules/@types/node/package.json
+backend/node_modules/@types/node/README.md
+backend/node_modules/@types/node/test.d.ts
+backend/node_modules/@types/node/worker_threads.d.ts
+backend/node_modules/@types/node/web-globals/events.d.ts
+backend/node_modules/@types/send/index.d.ts
+backend/node_modules/@types/send/package.json
+backend/node_modules/@types/send/README.md
+backend/node_modules/@types/serve-static/package.json
+backend/node_modules/@types/serve-static/README.md
+backend/node_modules/bcrypt/lib/binding/napi-v3/bcrypt_lib.node
+backend/node_modules/cookie/index.js
+backend/node_modules/cookie/package.json
+backend/node_modules/cookie/README.md
+backend/node_modules/cookie/SECURITY.md
+backend/node_modules/typescript/package.json
+backend/node_modules/typescript/lib/_tsc.js
+backend/node_modules/typescript/lib/lib.esnext.float16.d.ts
+backend/node_modules/typescript/lib/typescript.d.ts
+backend/node_modules/typescript/lib/typescript.js
+frontend/package-lock.json
