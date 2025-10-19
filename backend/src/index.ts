@@ -1,13 +1,16 @@
+import dotenv from "dotenv";
+dotenv.config();
+console.log("🔑 CLERK_PUBLISHABLE_KEY:", process.env.CLERK_PUBLISHABLE_KEY);
+console.log("🔑 CLERK_SECRET_KEY:", process.env.CLERK_SECRET_KEY);
+
 import express, { Request, Response, NextFunction } from "express";
 import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 import cors from "cors";
-import dotenv from "dotenv";
 
 const authRoutes = require("./routes/auth");
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
 
-dotenv.config();
 
 const app = express();
 app.use(cors());
