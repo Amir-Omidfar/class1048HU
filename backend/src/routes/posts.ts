@@ -18,10 +18,17 @@ router.post("/", requireAuth(), async (req: Request, res: Response) => {
        ON CONFLICT (id) DO NOTHING`,
       [userId, userId, ""] // username and email can be updated via webhook later
     );
-    
+
     const result = await pool.query(
       "INSERT INTO posts (title, content, tags, language, author_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [title, content, tags || [], language || "en", userId]
+    );
+    const postWithAuthor = await pool.query(
+      `SELECT p.*, u.username AS author_username, u.email AS author_email
+       FROM posts p
+       JOIN users u ON p.author_id = u.id
+       WHERE p.id = $1`,
+      [result.rows[0].id]
     );
     res.json(result.rows[0]);
   } catch (err: any) {
@@ -33,7 +40,11 @@ router.post("/", requireAuth(), async (req: Request, res: Response) => {
 router.get("/", async (req: Request, res: Response) => {
   const { language, tag, search } = req.query;
 
-  let query = "SELECT * FROM posts WHERE 1=1";
+  let query = `
+              SELECT p.*, u.username AS author_username, u.email AS author_email 
+              FROM posts p 
+              JOIN users u ON p.author_id = u.id 
+              WHERE 1=1`;
   const values: any[] = [];
 
   if (language) {
@@ -62,7 +73,14 @@ router.get("/", async (req: Request, res: Response) => {
 // Get single
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const result = await pool.query("SELECT * FROM posts WHERE id = $1", [req.params.id]);
+    const result = await pool.query(
+      `SELECT p.*, u.username AS user_username, u.email AS user_email
+       FROM posts p
+       LEFT JOIN users u ON p.author_id = u.id
+       WHERE p.id = $1`,
+      [req.params.id]
+    );
+
     if (result.rows.length === 0) return res.status(404).json({ error: "Not found" });
     res.json(result.rows[0]);
   } catch (err: any) {
@@ -85,6 +103,15 @@ router.put("/:id", requireAuth(), async (req: Request, res: Response) => {
       [title, content, tags || [], language || "en", id, userId]
     );
     if (result.rows.length === 0) return res.status(403).json({ error: "Not found or not authorized" });
+
+    //Fetch the updated post with author info
+    const updatedPost = await pool.query(
+      `SELECT p.*, u.username AS author_username, u.email AS author_email
+       FROM posts p
+       JOIN users u ON p.author_id = u.id
+       WHERE p.id = $1`,
+      [id]
+    );
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);

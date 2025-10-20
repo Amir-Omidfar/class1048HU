@@ -1,7 +1,6 @@
 "use client";
 import { TextField, Divider, ListItem, Stack,Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { useApi } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 import CommentForm from "../../components/CommentForm";
@@ -14,6 +13,8 @@ interface Post {
   content: string;
   created_at: string;
   author_id?: number; // make sure backend sends user_id with each post
+  user_email?: string;
+  user_username?: string;
 }
 
 interface Comment {
@@ -21,6 +22,8 @@ interface Comment {
   text: string;
   user_id: number;
   created_at: string;
+  user_email?: string;
+  user_username?: string;
 }
 
 export default function PostDetailPage() {
@@ -62,7 +65,7 @@ export default function PostDetailPage() {
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
           {t("postedOn")} {dayjs(post.created_at).format("MMMM D, YYYY h:mm A")}
         </Typography>
-        <Typography variant="subtitle2" color="text.secondary" gutterBottom> {t("authorID")}: {post.author_id || t("unknown")} </Typography>
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom> {t("authorEmail")}: {post.user_email || t("unknown")} </Typography>
         
       </Stack>
       <Divider sx={{ my: 3 }} />
@@ -73,7 +76,7 @@ export default function PostDetailPage() {
             <Stack>
               <Typography variant="body2">{c.text}</Typography>
               <Typography variant="caption" color="text.secondary">
-                {t("byUser")} {c.user_id} • {dayjs(c.created_at).format("MMM D, YYYY h:mm A")}
+                {t("byUser")} {c.user_email} • {dayjs(c.created_at).format("MMM D, YYYY h:mm A")}
               </Typography>
             </Stack>
           </ListItem>
