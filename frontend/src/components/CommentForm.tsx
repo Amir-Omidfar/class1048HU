@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import api from "../utils/api";
+import { useApi } from "../hooks/useApi";
 
 interface CommentFormProps {
   postId: string | number;
@@ -12,11 +12,11 @@ export default function CommentForm({ postId, onCommentAdded }: CommentFormProps
   const { t } = useTranslation();
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const api = useApi();
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
-
     setLoading(true);
     try {
       await api.post("/comments", { postId, text });

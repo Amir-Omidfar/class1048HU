@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import PostCard from "../components/PostCard";
-import api from "../utils/api";
+import { useApi } from "../hooks/useApi";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import {Button, TextField, Stack, MenuItem} from "@mui/material";
@@ -16,6 +16,7 @@ interface Post {
 }
 
 export default function Home() {
+  const api = useApi();
   const [posts, setPosts] = useState<Post[]>([]);
   const [language, setLanguage] = useState<string>("");
   const [tag, setTag] = useState<string>("");

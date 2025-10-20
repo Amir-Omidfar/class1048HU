@@ -1,0 +1,8 @@
+ALTER TABLE users
+    DROP COLUMN IF EXISTS password_hash;
+
+ALTER TABLE users
+    ALTER COLUMN username DROP NOT NULL;
+
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS email TEXT UNIQUE;

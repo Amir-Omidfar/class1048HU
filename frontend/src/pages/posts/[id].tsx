@@ -2,7 +2,7 @@
 import { TextField, Divider, ListItem, Stack,Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import api from "../../utils/api";
+import { useApi } from "../../hooks/useApi";
 import { useTranslation } from "react-i18next";
 import CommentForm from "../../components/CommentForm";
 import { useRouter } from "next/router";
@@ -32,6 +32,7 @@ export default function PostDetailPage() {
   
   const { t, i18n } = useTranslation();
   const direction = i18n.language === "fa" ? "rtl" : "ltr";
+  const api = useApi();
   const fetchData = async () => {
     try {
       const postRes = await api.get(`/posts/${id}`);

@@ -31,3 +31,5 @@ CREATE TABLE IF NOT EXISTS comments (
 -- Indexes (performance)
 CREATE INDEX IF NOT EXISTS idx_posts_language ON posts(language);
 CREATE INDEX IF NOT EXISTS idx_posts_tags ON posts USING GIN (tags);
+
+

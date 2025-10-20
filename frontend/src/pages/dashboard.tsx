@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api from "../utils/api";
+import { useApi } from "../hooks/useApi";
+const api = useApi();
 import Link from "next/link";
 
 interface Post {

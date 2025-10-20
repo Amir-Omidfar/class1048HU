@@ -7,6 +7,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { clerkMiddleware, requireAuth, getAuth } from "@clerk/express";
 import cors from "cors";
 
+const webhookRoutes = require("./routes/clerkWebhook");
 const authRoutes = require("./routes/auth");
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
@@ -15,6 +16,7 @@ const commentRoutes = require("./routes/comments");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/webhooks", webhookRoutes);
 
 // Use clerkMiddleware to set up request.auth (or req.auth) context
 app.use(clerkMiddleware());

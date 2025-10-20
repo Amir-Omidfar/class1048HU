@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import api from "../../utils/api";
+import { useApi } from "../../hooks/useApi";
 import NewPostForm from "../../components/NewPostForm";
 
 interface Post {
@@ -15,6 +15,7 @@ export default function EditPostPage() {
   const router = useRouter();
   const { id } = router.query;
   const [post, setPost] = useState<Post | null>(null);
+  const api = useApi();
 
   useEffect(() => {
     if (id) {

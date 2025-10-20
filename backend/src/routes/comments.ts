@@ -10,14 +10,29 @@ router.post("/", requireAuth(), async (req: Request, res: Response) => {
   const { postId, text, language } = req.body;
   const userId = getAuth(req).userId;
   if (!userId) return res.status(401).json({ error: "Auth required" });
+  console.log("🟡 Incoming /comments request:", {
+    userId,
+    body: req.body,
+    headers: req.headers.authorization+ "...",
+  });
+
 
   try {
+    // Ensure user exists in the users table
+    await pool.query(
+      `INSERT INTO users (id, username, email)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (id) DO NOTHING;`,
+      [userId, userId, null]
+    )
+
     const result = await pool.query(
       "INSERT INTO comments (post_id, user_id, text, language) VALUES ($1, $2, $3, $4) RETURNING *",
       [postId, userId, text, language || "en"]
     );
     res.json(result.rows[0]);
   } catch (err: any) {
+    console.error("❌ SQL Error:", err.message, err.stack);
     res.status(400).json({ error: err.message });
   }
 });

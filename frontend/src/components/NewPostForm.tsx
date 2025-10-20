@@ -1,6 +1,6 @@
 import { TextField, Button, ListItem, Stack } from "@mui/material";
 import React, { useState } from "react";
-import api from "../utils/api";
+import { useApi } from "../hooks/useApi";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +22,7 @@ export default function NewPostForm({ post }: Props) {
   const [content, setContent] = useState(post?.content || "");
   const [tags, setTags] = useState(post?.tags?.join(", ") || "");
   const [language, setLanguage] = useState(post?.language || i18n.language || "en");
-
+  const api = useApi();
   const isEditing = !!post;
 
   async function handleSubmit(e: React.FormEvent) {

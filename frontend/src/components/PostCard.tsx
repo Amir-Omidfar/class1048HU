@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import api from "../utils/api";
+import { useApi } from "../hooks/useApi";
 
 interface Post {
   id: number;
@@ -27,6 +27,7 @@ export default function PostCard({ post, currentUserId, onDelete }: {
   currentUserId?: number; 
   onDelete?: (id: number) => void;
 }) {
+  const api = useApi();
   const { t } = useTranslation();
   async function handleDelete() {
     if (!confirm(t("confirmDelete") || "Are you sure you want to delete this post?")) return;
