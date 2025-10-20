@@ -11,6 +11,14 @@ router.post("/", requireAuth(), async (req: Request, res: Response) => {
   if (!userId) return res.status(401).json({ error: "Auth required" });
 
   try {
+    // Ensure the user exists in the users table
+    await pool.query(
+      `INSERT INTO users (id, username, email)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (id) DO NOTHING`,
+      [userId, userId, ""] // username and email can be updated via webhook later
+    );
+    
     const result = await pool.query(
       "INSERT INTO posts (title, content, tags, language, author_id) VALUES ($1, $2, $3, $4, $5) RETURNING *",
       [title, content, tags || [], language || "en", userId]
