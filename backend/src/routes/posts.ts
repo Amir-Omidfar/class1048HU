@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { requireAuth, getAuth } from "@clerk/express";
-import { get } from "http";
 const { pool } = require("../db");
 
 const router = Router();

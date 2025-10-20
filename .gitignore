@@ -57,3 +57,8 @@ out
 
 # Mac
 .DS_Store
+
+# .env files
+.env.*
+backend/.env
+frontend/.env.local
